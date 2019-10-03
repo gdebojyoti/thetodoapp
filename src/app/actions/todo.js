@@ -29,3 +29,14 @@ export function updateTodo (todo) {
 export function deleteTodo (id) {
   saveTodos(getAllTodos().filter(todo => todo.id !== id))
 }
+
+// mark / unmark task as important
+export function starTodo (id) {
+  const todos = getAllTodos()
+  todos.map(todo => {
+    if (todo.id === id) {
+      todo.isStarred = !todo.isStarred
+    }
+  })
+  saveTodos(todos)
+}

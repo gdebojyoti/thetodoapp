@@ -21,6 +21,12 @@ export function addTodo (todo) {
   saveTodos(todos)
 }
 
+// mark / unmark a todo as done
+export function toggleTodo (id, isDone) {
+  const todos = getAllTodos().map(todo => todo.id === id ? { ...todo, isDone } : todo)
+  saveTodos(todos)
+}
+
 export function updateTodo (todo) {
   const todos = getAllTodos()
   saveTodos(todos)

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import TodoInput from '../../components/TodoInput'
 import TodoItem from '../../components/TodoItem'
 import TodoInputFullView from '../../components/TodoInputFullView'
-import { fetchTodos, addTodo, deleteTodo, starTodo } from '../../actions/todo'
+import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo } from '../../actions/todo'
 import { generateId } from '../../utilities/general'
 
 const Home = () => {
@@ -33,6 +33,24 @@ const Home = () => {
 
     // save to local storage
     addTodo(todo)
+  }
+
+  // mark / unmark todo as done
+  const onToggle = (id) => {
+    let isDone
+    const newTodos = todos.map(todo => {
+      if (todo.id !== id) {
+        return todo
+      }
+      isDone = !todo.isDone
+      return { ...todo, isDone: !todo.isDone }
+    })
+
+    // update view
+    setTodos(newTodos)
+
+    // save to local storage
+    toggleTodo(id, isDone)
   }
 
   const onDelete = (id) => {
@@ -68,7 +86,7 @@ const Home = () => {
       <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
       <ul>
         {todos.map((todo, index) => {
-          return <li key={index}><TodoItem item={todo} onDelete={onDelete} onToggleStar={onToggleStar} /></li>
+          return <li key={index}><TodoItem item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} /></li>
         })}
       </ul>
 

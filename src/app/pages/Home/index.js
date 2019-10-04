@@ -6,23 +6,27 @@ import TodoInputFullView from '../../components/TodoInputFullView'
 import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo } from '../../actions/todo'
 import { generateId } from '../../utilities/general'
 
+let deletedTodo = null
+
 const Home = () => {
   const [todos, setTodos] = useState([])
   const [isMoreDetailsModalOpen, setIsMoreDetailsModalOpen] = useState(false)
+  const [showUndo, setShowUndo] = useState(false)
 
   useEffect(() => {
     setTodos(fetchTodos())
   }, [])
 
-  // adding a new todo
-  const onAdd = ({ title, details, subTasks }) => {
+  // adding a new todo; also used for undoing last deleted todo
+  const onAdd = ({ title, details, subTasks, ...rest }) => {
     // construct todo object
     const todo = {
       id: generateId(),
       title,
       details,
       category: 'general',
-      createdAt: (new Date()).getTime()
+      createdAt: (new Date()).getTime(),
+      ...rest // required where other values (id, category, isDone, etc) already exist
     }
     if (subTasks) {
       todo.subTasks = subTasks
@@ -54,11 +58,16 @@ const Home = () => {
   }
 
   const onDelete = (id) => {
+    deletedTodo = todos.filter(todo => todo.id === id)[0]
+
     // update view
     setTodos(todos.filter(todo => todo.id !== id))
 
     // save to local storage
     deleteTodo(id)
+
+    // show undo button; @TODO: to be replaced with toast
+    setShowUndo(true)
   }
 
   const onToggleStar = (id) => {
@@ -81,6 +90,22 @@ const Home = () => {
     setIsMoreDetailsModalOpen(true)
   }
 
+  const undoDeletion = () => {
+    // hide button
+    setShowUndo(false)
+
+    // exit if no todo is found
+    if (!deletedTodo) {
+      return
+    }
+
+    // restore todo
+    onAdd(deletedTodo)
+
+    // clear record
+    deletedTodo = null
+  }
+
   return (
     <div>
       <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
@@ -91,6 +116,8 @@ const Home = () => {
       </ul>
 
       {isMoreDetailsModalOpen && <TodoInputFullView onSubmit={onAdd} onClose={() => setIsMoreDetailsModalOpen(false)} />}
+
+      {showUndo && <button onClick={undoDeletion}>Undo last deleted</button>}
     </div>
   )
 }

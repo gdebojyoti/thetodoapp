@@ -10,7 +10,7 @@ let deletedTodo = null
 
 const Home = () => {
   const [todos, setTodos] = useState([])
-  const [isMoreDetailsModalOpen, setIsMoreDetailsModalOpen] = useState(false)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false) // when true, open 'More details' (full view for adding new todo) modal
   const [showUndo, setShowUndo] = useState(false)
 
   useEffect(() => {
@@ -70,6 +70,7 @@ const Home = () => {
     setShowUndo(true)
   }
 
+  // mark / unmark a todo as important
   const onToggleStar = (id) => {
     const newTodos = [...todos]
     newTodos.map(todo => {
@@ -85,9 +86,10 @@ const Home = () => {
     starTodo(id)
   }
 
+  // open 'More details' modal
   const openMoreDetails = (e) => {
     e.preventDefault()
-    setIsMoreDetailsModalOpen(true)
+    setIsDetailsOpen(true)
   }
 
   const undoDeletion = () => {
@@ -115,7 +117,7 @@ const Home = () => {
         })}
       </ul>
 
-      {isMoreDetailsModalOpen && <TodoInputFullView onSubmit={onAdd} onClose={() => setIsMoreDetailsModalOpen(false)} />}
+      {isDetailsOpen && <TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} />}
 
       {showUndo && <button onClick={undoDeletion}>Undo last deleted</button>}
     </div>

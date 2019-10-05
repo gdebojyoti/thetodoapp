@@ -11,6 +11,7 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
     list: {}
   })
   const [subTasks, setSubTasks] = useState([])
+  const [isNewListOpen, setIsNewListOpen] = useState(false) // if true, open create new list modal
 
   useEffect(() => {
     // fetch lists from local storage
@@ -84,6 +85,24 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
     onClose()
   }
 
+  const onCreateList = (name) => {
+    // create new list
+    const list = {
+      id: generateId(),
+      name
+    }
+
+    // append new list to existing collection
+    setLists([...lists, list])
+    setTodo({
+      ...todo,
+      list
+    })
+
+    // assign current task to newly created list
+    setIsNewListOpen(false)
+  }
+
   return (
     <>
       <div>Add a new Todo</div>
@@ -100,11 +119,14 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
 
         Add to folder:
         <Lists data={lists} selected={todo.list} onChange={selectList} />
+        {!isNewListOpen && <button type='button' onClick={() => setIsNewListOpen(true)}>+ New list</button>}
 
         <br /><br />
 
         <button type='submit' disabled={!title}>Save</button>
       </form>
+
+      {isNewListOpen && <NewList onCreate={onCreateList} onCancel={() => setIsNewListOpen(false)} />}
     </>
   )
 }
@@ -130,6 +152,31 @@ const Lists = ({ data, selected = {}, onChange: onChangeSelection }) => {
       <option>Select any one!</option>
       {data.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
     </select>
+  )
+}
+
+const NewList = ({ onCreate, onCancel: onCancelList }) => {
+  const [name, setName] = useState('')
+  const onChange = e => {
+    setName(e.target.value)
+  }
+  const onSubmit = e => {
+    e.stopPropagation()
+    e.preventDefault()
+    if (name) {
+      onCreate(name)
+      setName('')
+    }
+  }
+  const onCancel = () => {
+    onCancelList()
+  }
+  return (
+    <form onSubmit={onSubmit}>
+      <input type='text' value={name} onChange={onChange} />
+      <button type='submit'>Create & add to list</button>
+      <button type='button' onClick={onCancel}>Cancel</button>
+    </form>
   )
 }
 

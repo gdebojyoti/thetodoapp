@@ -1,5 +1,6 @@
 var path = require('path')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 var sourceDirectory = path.resolve(__dirname, '../src')
 var publicDirectory = path.resolve(__dirname, '../public')
@@ -24,6 +25,15 @@ var config = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },
@@ -33,6 +43,10 @@ var config = {
       title: 'The Todo App!',
       template: sourceDirectory + '/index.html',
       filename: 'index.html' // relative to root of the application
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css-[name].css',
+      chunkFilename: 'csschunk-[name].bundle.css'
     })
   ]
 }

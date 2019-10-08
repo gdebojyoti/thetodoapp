@@ -152,6 +152,7 @@ const Home = () => {
         {todos.map((todo, index) => {
           return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
         })}
+        {!todos.length && <div>No tasks found. Create your first one.</div>}
       </div>
 
       <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />

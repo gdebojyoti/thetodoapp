@@ -27,8 +27,7 @@ export function toggleTodo (id, isDone) {
   saveTodos(todos)
 }
 
-export function updateTodo (todo) {
-  const todos = getAllTodos()
+export function updateTodo (todos) {
   saveTodos(todos)
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 import './style'
 
-const TodoItem = ({ item, onToggle: onToggleDone, onDelete, onToggleStar }) => {
+const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }) => {
   const { id, title, isDone, details, category, createdAt, subTasks = [], list: { name: list } = {}, isStarred } = item
 
   // generate time from createdAt (D/M)
@@ -10,17 +10,22 @@ const TodoItem = ({ item, onToggle: onToggleDone, onDelete, onToggleStar }) => {
   const time = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`
 
   // mark / unmark a task as done
-  const onToggle = () => {
+  const onToggle = (e) => {
+    e.stopPropagation()
     onToggleDone(id)
+  }
+
+  const triggerEdit = () => {
+    edit(id)
   }
 
   const titleClass = 'todo-item__name' + (isDone ? ' todo-item__name--done' : '')
 
   return (
-    <div className='todo-item'>
+    <div className='todo-item' onClick={triggerEdit}>
       <div className='todo-item__checkbox' onClick={onToggle}>
         {/* <input type='checkbox' checked={!!isDone} onChange={onToggle} /> */}
-        <span onClick={onToggle}>{isDone ? '☑' : '☐'}</span>
+        {isDone ? '☑' : '☐'}
       </div>
 
       <div className='todo-item__info'>
@@ -32,8 +37,8 @@ const TodoItem = ({ item, onToggle: onToggleDone, onDelete, onToggleStar }) => {
       </div>
 
       <div className='todo-item__controls'>
-        <button onClick={() => onDelete(id)} className='todo-item__control-icon todo-item__control-icon--delete' title='Delete todo'>✕</button>
-        <button onClick={() => onToggleStar(id)} className='todo-item__control-icon todo-item__star todo-item__control-icon--star' title={`${isStarred ? 'Unmark' : 'Mark'} as Important`}>{isStarred ? '★' : '☆'}</button>
+        <button onClick={e => { e.stopPropagation(); onDelete(id) }} className='todo-item__control-icon todo-item__control-icon--delete' title='Delete todo'>✕</button>
+        <button onClick={e => { e.stopPropagation(); onToggleStar(id) }} className='todo-item__control-icon todo-item__star todo-item__control-icon--star' title={`${isStarred ? 'Unmark' : 'Mark'} as Important`}>{isStarred ? '★' : '☆'}</button>
       </div>
     </div>
   )

@@ -4,10 +4,12 @@ import { generateId } from '../../utilities/general'
 
 import './style'
 
-const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
+const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
   const [lists, setLists] = useState([])
 
-  const [todo, setTodo] = useState({
+  const isEditMode = !!data
+
+  const [todo, setTodo] = useState(data || {
     title: '',
     details: '',
     list: {}
@@ -109,7 +111,7 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
 
   return (
     <div className='fullview'>
-      <h2 className='fullview__title'>Add a new Todo</h2>
+      <h2 className='fullview__title'>{isEditMode ? 'Edit existing Task' : 'Add a new Task'}</h2>
       <form onSubmit={onSubmit}>
         <input type='text' className='fullview__input-title' placeholder='Title' value={title} onChange={e => onChange(e, 'title')} />
         <textarea className='fullview__details' placeholder='Details' value={details} onChange={e => onChange(e, 'details')} />
@@ -127,7 +129,7 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
 
         <br /><br />
 
-        <button className={ctaClass} type='submit' disabled={!title}>Save</button>
+        <button className={ctaClass} type='submit' disabled={!title}>{isEditMode ? 'Update' : 'Save'}</button>
       </form>
 
       {isNewListOpen && <NewList onCreate={onCreateList} onCancel={() => setIsNewListOpen(false)} />}

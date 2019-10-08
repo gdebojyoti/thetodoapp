@@ -5,7 +5,7 @@ import TodoItem from '../../components/TodoItem'
 import TodoInputFullView from '../../components/TodoInputFullView'
 import Modal from '../../components/Modal'
 import Toast from '../../components/Toast'
-import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo } from '../../actions/todo'
+import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo, updateTodo } from '../../actions/todo'
 import { generateId } from '../../utilities/general'
 
 import '../core' // @TODO: Find a better way to include core styles in every page
@@ -17,6 +17,7 @@ let deletedTodo = null
 const Home = () => {
   const [todos, setTodos] = useState([])
   const [isDetailsOpen, setIsDetailsOpen] = useState(false) // when true, open 'More details' (full view for adding new todo) modal
+  const [editId, setEditId] = useState(null) // when true, open 'Edit Task' modal
   const [showingToast, isShowingToast] = useState(false)
 
   useEffect(() => {
@@ -43,6 +44,25 @@ const Home = () => {
 
     // save to local storage
     addTodo(todo)
+  }
+
+  const onUpdate = ({ id, subTasks, ...rest }) => {
+    const newTodos = todos.map(todo => {
+      if (todo.id === id) {
+        return ({
+          id,
+          ...rest
+        })
+      } else {
+        return todo
+      }
+    })
+
+    // update view
+    setTodos(newTodos)
+
+    // save updated list to local storage
+    updateTodo(newTodos)
   }
 
   // mark / unmark todo as done
@@ -130,13 +150,14 @@ const Home = () => {
 
       <div className='home__list'>
         {todos.map((todo, index) => {
-          return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} />
+          return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
         })}
       </div>
 
       <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
 
       {isDetailsOpen && <Modal onClose={() => setIsDetailsOpen(false)}><TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} /></Modal>}
+      {editId && <Modal onClose={() => setEditId(null)}><TodoInputFullView data={todos.find(todo => todo.id === editId)} onSubmit={onUpdate} onClose={() => setEditId(null)} /></Modal>}
 
       {showingToast && <Toast text='Your task was deleted' cta='Undo' onClick={undoDeletion} />}
     </div>

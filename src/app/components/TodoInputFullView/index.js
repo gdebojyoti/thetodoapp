@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import { generateId } from '../../utilities/general'
 
+import './style'
+
 const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
   const [lists, setLists] = useState([])
 
@@ -103,12 +105,14 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
     setIsNewListOpen(false)
   }
 
+  const ctaClass = 'fullview__cta' + (title ? '' : ' fullview__cta--disabled')
+
   return (
-    <>
-      <div>Add a new Todo</div>
+    <div className='fullview'>
+      <h2 className='fullview__title'>Add a new Todo</h2>
       <form onSubmit={onSubmit}>
-        <input type='text' placeholder='Title' value={title} onChange={e => onChange(e, 'title')} />
-        <textarea placeholder='Details' value={details} onChange={e => onChange(e, 'details')} />
+        <input type='text' className='fullview__input-title' placeholder='Title' value={title} onChange={e => onChange(e, 'title')} />
+        <textarea className='fullview__details' placeholder='Details' value={details} onChange={e => onChange(e, 'details')} />
 
         <br /><br />
 
@@ -123,11 +127,11 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose }) => {
 
         <br /><br />
 
-        <button type='submit' disabled={!title}>Save</button>
+        <button className={ctaClass} type='submit' disabled={!title}>Save</button>
       </form>
 
       {isNewListOpen && <NewList onCreate={onCreateList} onCancel={() => setIsNewListOpen(false)} />}
-    </>
+    </div>
   )
 }
 

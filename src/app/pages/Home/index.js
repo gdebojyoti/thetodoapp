@@ -3,15 +3,21 @@ import React, { useState, useEffect } from 'react'
 import TodoInput from '../../components/TodoInput'
 import TodoItem from '../../components/TodoItem'
 import TodoInputFullView from '../../components/TodoInputFullView'
+import Modal from '../../components/Modal'
+import Toast from '../../components/Toast'
 import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo } from '../../actions/todo'
 import { generateId } from '../../utilities/general'
 
+import '../core' // @TODO: Find a better way to include core styles in every page
+import './style'
+
+let toastTimer = null // @TODO: Use toast manager
 let deletedTodo = null
 
 const Home = () => {
   const [todos, setTodos] = useState([])
   const [isDetailsOpen, setIsDetailsOpen] = useState(false) // when true, open 'More details' (full view for adding new todo) modal
-  const [showUndo, setShowUndo] = useState(false)
+  const [showingToast, isShowingToast] = useState(false)
 
   useEffect(() => {
     setTodos(fetchTodos())
@@ -66,8 +72,7 @@ const Home = () => {
     // save to local storage
     deleteTodo(id)
 
-    // show undo button; @TODO: to be replaced with toast
-    setShowUndo(true)
+    triggerToast()
   }
 
   // mark / unmark a todo as important
@@ -93,8 +98,9 @@ const Home = () => {
   }
 
   const undoDeletion = () => {
-    // hide button
-    setShowUndo(false)
+    // @TODO: Use toast manager
+    // hide toast
+    isShowingToast(false)
 
     // exit if no todo is found
     if (!deletedTodo) {
@@ -108,18 +114,31 @@ const Home = () => {
     deletedTodo = null
   }
 
+  // @TODO: Use toast manager
+  const triggerToast = () => {
+    toastTimer && clearTimeout(toastTimer)
+    isShowingToast(true)
+
+    toastTimer = setTimeout(() => {
+      isShowingToast(false)
+    }, 2000)
+  }
+
   return (
-    <div>
-      <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
-      <ul>
+    <div className='home'>
+      <h1 className='home__title'>My Tasks</h1>
+
+      <div className='home__list'>
         {todos.map((todo, index) => {
-          return <li key={index}><TodoItem item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} /></li>
+          return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} />
         })}
-      </ul>
+      </div>
 
-      {isDetailsOpen && <TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} />}
+      <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
 
-      {showUndo && <button onClick={undoDeletion}>Undo last deleted</button>}
+      {isDetailsOpen && <Modal onClose={() => setIsDetailsOpen(false)}><TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} /></Modal>}
+
+      {showingToast && <Toast text='Your task was deleted' cta='Undo' onClick={undoDeletion} />}
     </div>
   )
 }

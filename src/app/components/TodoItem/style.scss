@@ -1,0 +1,51 @@
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+  &__info {
+    flex-grow: 1;
+    margin: 0 10px;
+  }
+  &__name {
+    &--done {
+      color: #999;
+      text-decoration: line-through;
+    }
+  }
+  &__details {
+    margin-top: 7px;
+    font-size: 12px;
+    color: #555;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  &__points {
+    margin-top: 7px;
+    font-size: 12px;
+    color: #999;
+  }
+  &__controls {
+    flex-shrink: 0;
+  }
+  &__control-icon {
+    margin-left: 5px;
+    padding: 0 5px;
+    border: none;
+    line-height: 20px;
+    background-color: transparent;
+    vertical-align: top;
+    &--delete {
+      color: #999;
+      font-weight: bold;
+    }
+    &--star {
+      font-size: 20px;
+      color: #f39c12;
+    }
+  }
+}

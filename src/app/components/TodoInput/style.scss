@@ -1,0 +1,45 @@
+@import '../../utilities/variables';
+
+.todo-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(26px);
+  transition: transform .2s;
+
+  &--focussed {
+    transform: translateY(0);
+  }
+
+  &__form {
+    display: flex;
+  }
+  
+  &__input {
+    flex-grow: 1;
+    padding: 0 16px;
+    border: none;
+    border-top: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    line-height: 48px;
+  }
+  
+  &__cta {
+    padding: 0 16px;
+    border: none;
+    color: #fff;
+    background-color: $primaryColor;
+  }
+
+  &__trigger {
+    display: inline-block;
+    width: 100%;
+    font-size: 12px;
+    line-height: 25px;
+    color: #aaa;
+    text-align: center;
+    background-color: #fffc;
+    backdrop-filter: blur(4px);
+  }
+}

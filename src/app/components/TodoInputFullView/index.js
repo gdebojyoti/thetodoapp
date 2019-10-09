@@ -14,7 +14,11 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
     details: '',
     list: {}
   })
-  const [subTasks, setSubTasks] = useState(data ? (data.subTasks || []) : [])
+  let existingSubTasks = [{}]
+  if (data && data.subTasks && data.subTasks.length) {
+    existingSubTasks = [...data.subTasks, {}]
+  }
+  const [subTasks, setSubTasks] = useState(existingSubTasks)
   const [isNewListOpen, setIsNewListOpen] = useState(false) // if true, open create new list modal
 
   useEffect(() => {
@@ -47,20 +51,21 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
     }
   }
 
-  const addSubTask = () => {
-    const newTasks = [...subTasks]
-    newTasks.push({
-      id: generateId(),
-      title: '',
-      createdAt: (new Date()).getTime()
-    })
-    setSubTasks(newTasks)
-  }
-
   const updateSubTasks = (id, title) => {
-    setSubTasks(subTasks.map(task => {
-      return (task.id === id) ? { ...task, title } : task
-    }))
+    if (id) {
+      setSubTasks(subTasks.map(task => {
+        return (task.id === id) ? { ...task, title } : task
+      }))
+    } else {
+      const newTasks = [...subTasks]
+      newTasks[subTasks.length - 1] = {
+        id: generateId(),
+        title,
+        createdAt: (new Date()).getTime()
+      }
+      newTasks.push({})
+      setSubTasks(newTasks)
+    }
   }
 
   const deleteSubTask = (id) => {
@@ -113,13 +118,13 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
     <div className='fullview'>
       <h2 className='fullview__title'>{isEditMode ? 'Edit existing Task' : 'Add a new Task'}</h2>
       <form onSubmit={onSubmit}>
-        <input type='text' className='fullview__input-title' placeholder='Title' value={title} onChange={e => onChange(e, 'title')} />
+        <input type='text' className='fullview__input' placeholder='Title' value={title} onChange={e => onChange(e, 'title')} />
         <textarea className='fullview__details' placeholder='Details' value={details} onChange={e => onChange(e, 'details')} />
 
         <br /><br />
 
-        Sub tasks: <button type='button' onClick={addSubTask}>Add sub task</button>
-        {subTasks.map(task => <SubTaskInput key={task.id} data={task} onSave={updateSubTasks} onDelete={deleteSubTask} />)}
+        Sub tasks:
+        {subTasks.map((task, index) => <SubTaskInput key={index} data={task} onSave={updateSubTasks} onDelete={deleteSubTask} />)}
 
         <br /><br />
 
@@ -137,14 +142,14 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
   )
 }
 
-const SubTaskInput = ({ data, onSave, onDelete }) => {
+const SubTaskInput = ({ data: { id, title = '' } = {}, onSave, onDelete }) => {
   const onChange = (e) => {
-    onSave(data.id, e.target.value)
+    onSave(id, e.target.value)
   }
   return (
-    <div>
-      <input type='text' value={data.title} onChange={onChange} />
-      <button type='button' onClick={() => onDelete(data.id)}>Delete</button>
+    <div className='fullview__subtask'>
+      <input type='text' className='fullview__input fullview__subtask-input' value={title} onChange={onChange} placeholder='Add a sub task' />
+      <button type='button' className='fullview__subtask-del' onClick={() => onDelete(id)}>✕</button>
     </div>
   )
 }

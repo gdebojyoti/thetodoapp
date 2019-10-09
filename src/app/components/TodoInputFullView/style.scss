@@ -9,12 +9,12 @@
     font-weight: 700;
   }
 
-  &__input-title, &__details {
+  &__input, &__details {
     width: 100%;
     border-bottom: solid 1px #ccc;
   }
 
-  &__input-title {
+  &__input {
     line-height: 30px;
   }
 
@@ -23,6 +23,24 @@
     height: 100px;
     line-height: 1.5;
     resize: none;
+  }
+
+  &__subtask {
+    position: relative;
+    margin-top: 10px;
+  }
+
+  &__subtask-input {
+    padding-right: 20px;
+  }
+
+  &__subtask-del {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    color: gray;
+    font-weight: 700;
+    background-color: transparent;
   }
 
   &__cta {

@@ -27,13 +27,13 @@ export function toggleTodo (id, isDone) {
   saveTodos(todos)
 }
 
-export function updateTodo (todos) {
+export function updateTodos (todos) {
   saveTodos(todos)
 }
 
-export function deleteTodo (id) {
-  saveTodos(getAllTodos().filter(todo => todo.id !== id))
-}
+// export function deleteTodo (id) {
+//   saveTodos(getAllTodos().filter(todo => todo.id !== id))
+// }
 
 // mark / unmark task as important
 export function starTodo (id) {

@@ -5,7 +5,7 @@ import TodoItem from '../../components/TodoItem'
 import TodoInputFullView from '../../components/TodoInputFullView'
 import Modal from '../../components/Modal'
 import Toast from '../../components/Toast'
-import { fetchTodos, addTodo, toggleTodo, deleteTodo, starTodo, updateTodo } from '../../actions/todo'
+import { fetchTodos, addTodo, toggleTodo, starTodo, updateTodos } from '../../actions/todo'
 import { generateId } from '../../utilities/general'
 
 import '../core' // @TODO: Find a better way to include core styles in every page
@@ -24,7 +24,7 @@ const Home = () => {
     setTodos(fetchTodos())
   }, [])
 
-  // adding a new todo; also used for undoing last deleted todo
+  // adding a new todo
   const onAdd = ({ title, details, subTasks, ...rest }) => {
     const timeStamp = (new Date()).getTime()
     console.log('sdsd', (new Date()).getTime(), (new Date()).getTime())
@@ -49,7 +49,9 @@ const Home = () => {
     addTodo(todo)
   }
 
+  // updating an existing todo; also used for undoing last deleted todo
   const onUpdate = ({ id, ...rest }) => {
+    // generate new list of todos
     const newTodos = todos.map(todo => {
       if (todo.id === id) {
         return ({
@@ -66,7 +68,33 @@ const Home = () => {
     setTodos(newTodos)
 
     // save updated list to local storage
-    updateTodo(newTodos)
+    updateTodos(newTodos)
+  }
+
+  // when a todo is deleted, only its reference (id & isDeleted flag) will be left in todos array
+  const onDelete = (id) => {
+    deletedTodo = todos.filter(todo => todo.id === id)[0]
+
+    // generate new list of todos
+    const newTodos = todos.map(todo => {
+      if (todo.id === id) {
+        return ({
+          id,
+          isDeleted: true
+        })
+      } else {
+        return todo
+      }
+    })
+
+    // update view
+    setTodos(newTodos)
+
+    // save updated list to local storage
+    updateTodos(newTodos)
+
+    // show toast msg - indicating todo deletion, with an option to undo
+    triggerToast()
   }
 
   // mark / unmark todo as done
@@ -85,18 +113,6 @@ const Home = () => {
 
     // save to local storage
     toggleTodo(id, isDone)
-  }
-
-  const onDelete = (id) => {
-    deletedTodo = todos.filter(todo => todo.id === id)[0]
-
-    // update view
-    setTodos(todos.filter(todo => todo.id !== id))
-
-    // save to local storage
-    deleteTodo(id)
-
-    triggerToast()
   }
 
   // mark / unmark a todo as important
@@ -132,7 +148,7 @@ const Home = () => {
     }
 
     // restore todo
-    onAdd(deletedTodo)
+    onUpdate(deletedTodo)
 
     // clear record
     deletedTodo = null
@@ -153,7 +169,7 @@ const Home = () => {
       <h1 className='home__title'>My Tasks</h1>
 
       <div className='home__list'>
-        {todos.map((todo, index) => {
+        {todos.filter(({ isDeleted }) => !isDeleted).map((todo, index) => {
           return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
         })}
         {!todos.length && <div>No tasks found. Create your first one.</div>}

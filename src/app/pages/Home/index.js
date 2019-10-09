@@ -27,13 +27,12 @@ const Home = () => {
   // adding a new todo
   const onAdd = ({ title, details, subTasks, ...rest }) => {
     const timeStamp = (new Date()).getTime()
-    console.log('sdsd', (new Date()).getTime(), (new Date()).getTime())
     // construct todo object
     const todo = {
       id: generateId(),
       title,
       details,
-      category: 'general',
+      // category: 'general',
       createdAt: timeStamp,
       lastUpdated: timeStamp,
       ...rest // required where other values (id, category, isDone, etc) already exist
@@ -164,15 +163,18 @@ const Home = () => {
     }, 2000)
   }
 
+  // order of todos: pending tasks, followed by completed ones
+  const validTodos = [...todos.filter(({ isDone, isDeleted }) => !isDone && !isDeleted), ...todos.filter(({ isDone, isDeleted }) => isDone && !isDeleted)]
+
   return (
     <div className='home'>
       <h1 className='home__title'>My Tasks</h1>
 
       <div className='home__list'>
-        {todos.filter(({ isDeleted }) => !isDeleted).map((todo, index) => {
+        {validTodos.filter(({ isDeleted }) => !isDeleted).map((todo, index) => {
           return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
         })}
-        {!todos.length && <div>No tasks found. Create your first one.</div>}
+        {!validTodos.length && <div>No tasks found. Create a new one.</div>}
       </div>
 
       <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />

@@ -3,7 +3,7 @@ import React from 'react'
 import './style'
 
 const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }) => {
-  const { id, title, isDone, details, category, createdAt, subTasks = [], list: { name: list } = {}, isStarred } = item
+  const { id, title, isDone, details, createdAt, subTasks = [], list: { name: list } = {}, isStarred } = item
 
   // generate time from createdAt (D/M)
   const date = new Date(createdAt)
@@ -21,6 +21,11 @@ const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }
 
   const titleClass = 'todo-item__name' + (isDone ? ' todo-item__name--done' : '')
 
+  const points = [] // list • time • subtasks count
+  list && points.push(`${list}`)
+  points.push(time)
+  !!subTasks.length && points.push(`${subTasks.length} task${subTasks.length > 1 ? 's' : ''}`)
+
   return (
     <div className='todo-item' onClick={triggerEdit}>
       <div className='todo-item__checkbox' onClick={onToggle}>
@@ -31,9 +36,7 @@ const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }
       <div className='todo-item__info'>
         <div className={titleClass}>{title}</div>
         {details && <div className='todo-item__details'>{details}</div>}
-        <div className='todo-item__points'>
-          {category} {list && `• ${list}`} • {time} {!!subTasks.length && `• ${subTasks.length} task`}{subTasks.length > 1 && 's'}
-        </div>
+        <div className='todo-item__points'>{points.join(' • ')}</div>
       </div>
 
       <div className='todo-item__controls'>

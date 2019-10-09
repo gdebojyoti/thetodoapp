@@ -26,13 +26,16 @@ const Home = () => {
 
   // adding a new todo; also used for undoing last deleted todo
   const onAdd = ({ title, details, subTasks, ...rest }) => {
+    const timeStamp = (new Date()).getTime()
+    console.log('sdsd', (new Date()).getTime(), (new Date()).getTime())
     // construct todo object
     const todo = {
       id: generateId(),
       title,
       details,
       category: 'general',
-      createdAt: (new Date()).getTime(),
+      createdAt: timeStamp,
+      lastUpdated: timeStamp,
       ...rest // required where other values (id, category, isDone, etc) already exist
     }
     if (subTasks) {
@@ -46,12 +49,13 @@ const Home = () => {
     addTodo(todo)
   }
 
-  const onUpdate = ({ id, subTasks, ...rest }) => {
+  const onUpdate = ({ id, ...rest }) => {
     const newTodos = todos.map(todo => {
       if (todo.id === id) {
         return ({
           id,
-          ...rest
+          ...rest,
+          lastUpdated: (new Date()).getTime()
         })
       } else {
         return todo

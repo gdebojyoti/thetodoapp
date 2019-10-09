@@ -14,7 +14,7 @@ const TodoInputFullView = ({ onSubmit: onSubmitTodo, onClose, data }) => {
     details: '',
     list: {}
   })
-  const [subTasks, setSubTasks] = useState([])
+  const [subTasks, setSubTasks] = useState(data ? data.subTasks : [])
   const [isNewListOpen, setIsNewListOpen] = useState(false) // if true, open create new list modal
 
   useEffect(() => {

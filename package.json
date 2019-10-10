@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config config/webpack.client.js --host 0.0.0.0",
+    "dev:build:client": "webpack --config config/webpack.client.js --watch",
+    "dev:build:server": "webpack --config config/webpack.server.js --watch",
+    "dev:server": "nodemon --watch build --exec \"node build/bundle.js\"",
     "build": "node scripts/build.js && webpack -p --config config/webpack.client.js"
   },
   "keywords": [],
@@ -17,6 +20,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "mini-css-extract-plugin": "^0.8.0",
+    "nodemon": "^1.19.3",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-router-dom": "^5.1.2",

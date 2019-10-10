@@ -1,30 +1,22 @@
 var path = require('path')
-// var HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 var sourceDirectory = path.resolve(__dirname, '../src')
-var publicDirectory = path.resolve(__dirname, '../public')
+var buildDirectory = path.resolve(__dirname, '../build')
 var hostname = 'http://xenspaces.xyz/'
 
 var config = {
+  target: 'node',
   mode: 'development',
-  entry: sourceDirectory + '/client/index.js',
+  entry: sourceDirectory + '/server/index.js',
   output: {
-    path: publicDirectory,
-    publicPath: '',
+    path: buildDirectory,
     filename: 'bundle.js'
-    // filename: 'bundle-[name].[hash:8].js',
   },
   resolve: {
     extensions: ['.js', '.json', '.scss']
-    // symlinks: true
-  },
-  devServer: {
-    // inline: true,
-    port: 9876,
-    historyApiFallback: true
   },
   module: {
     rules: [
@@ -44,28 +36,9 @@ var config = {
       }
     ]
   },
-  // optimization: {
-  //   splitChunks: {
-  //     cacheGroups: {
-  //       vendor: {
-  //         test: /[\\/]node_modules[\\/]/,
-  //         name: 'vendors',
-  //         chunks: 'all'
-  //       }
-  //     }
-  //   }
-  // },
   plugins: [
-    // new HtmlWebpackPlugin({
-    //   hash: false,
-    //   title: 'The Todo App!',
-    //   template: sourceDirectory + '/index.html',
-    //   filename: 'index.html' // relative to root of the application
-    // }),
     new MiniCssExtractPlugin({
       filename: 'style.css'
-      // filename: 'css-[name].[contenthash:8].css',
-      // chunkFilename: 'csschunk-[name].bundle.css'
     }),
     new SWPrecacheWebpackPlugin(
       {
@@ -85,13 +58,6 @@ var config = {
       theme_color: '#c0392b',
       'theme-color': '#c0392b',
       start_url: '/'
-      // icons: [
-      //   {
-      //     src: path.resolve('src/images/icon.png'),
-      //     sizes: [96, 128, 192, 256, 384, 512],
-      //     destination: path.join('assets', 'icons')
-      //   }
-      // ]
     })
   ]
 }

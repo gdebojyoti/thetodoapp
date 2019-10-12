@@ -19,6 +19,7 @@
     "mini-css-extract-plugin": "^0.8.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
+    "react-google-login": "^5.0.5",
     "react-router-dom": "^5.1.2",
     "sass-loader": "^8.0.0",
     "webpack": "^4.41.0",

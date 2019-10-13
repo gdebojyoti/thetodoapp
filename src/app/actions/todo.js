@@ -1,4 +1,5 @@
 import { getValue, setValue } from '../utilities/localStorage'
+import config from '../config'
 
 // get all TODOs from database / local storage
 function getAllTodos () {
@@ -44,4 +45,27 @@ export function starTodo (id) {
     }
   })
   saveTodos(todos)
+}
+
+export function syncTodos () {
+  const { email } = getValue('profile') || {}
+  if (!email) {
+    return
+  }
+  window.fetch(config.BACKEND_SERVER + '/syncTodos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      todos: getAllTodos(),
+      email,
+      token: getValue('token')
+    })
+  })
+    .then(response => response.json())
+    .then(json => {
+      console.log('todos', json)
+    })
+    .catch(err => console.warn('err', err))
 }

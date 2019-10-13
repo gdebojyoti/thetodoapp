@@ -5,4 +5,10 @@
   flex-direction: column;
   height: 100%;
   padding: 20px;
+
+  &__home {
+    margin-top: 25px;
+    padding: 0 10px;
+    line-height: 40px;
+  }
 }

@@ -3,6 +3,7 @@ import GoogleLogin from 'react-google-login'
 
 import { getValue } from '../../utilities/localStorage'
 import { onGoogleLoginSuccess, onGoogleLoginFailure } from '../../actions/auth'
+import { syncTodos } from '../../actions/todo'
 import config from '../../config'
 
 import './style'
@@ -27,6 +28,10 @@ const Login = () => {
     setName(profile.getName())
   }
 
+  const goHome = () => {
+    window.location.href = '/'
+  }
+
   return (
     <div className='login'>
       {name && <div>Hi {name}. You are currently signed in with {email}.</div>}
@@ -41,7 +46,8 @@ const Login = () => {
         />
       )}
 
-      {/* <button onClick={postGoogleLogin}>Fetch token</button> */}
+      <button className='login__home' onClick={goHome}>Back to Home</button>
+      <button className='login__home' onClick={syncTodos}>Sync data</button>
     </div>
   )
 }

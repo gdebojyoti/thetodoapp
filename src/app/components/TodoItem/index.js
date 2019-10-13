@@ -40,7 +40,7 @@ const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }
       </div>
 
       <div className='todo-item__controls'>
-        <button onClick={e => { e.stopPropagation(); onDelete(id) }} className='todo-item__control-icon todo-item__control-icon--delete' title='Delete todo'>✕</button>
+        <button onClick={e => { e.stopPropagation(); onDelete(id) }} className='todo-item__control-icon todo-item__control-icon--delete' title='Delete todo'>✖</button>
         <button onClick={e => { e.stopPropagation(); onToggleStar(id) }} className='todo-item__control-icon todo-item__star todo-item__control-icon--star' title={`${isStarred ? 'Unmark' : 'Mark'} as Important`}>{isStarred ? '★' : '☆'}</button>
       </div>
     </div>

@@ -1,17 +1,14 @@
-import { getValue, setValue } from '../utilities/localStorage'
+import { setValue } from '../utilities/localStorage'
 import config from '../config'
 
 export function onGoogleLoginSuccess (googleUser) {
   // The ID token you need to pass to your backend:
-  const tokenId = googleUser.getAuthResponse().id_token
-  console.log('ID Token:', tokenId)
-
-  // save token ID in local storage
-  setValue('GOOGLE_AUTH_TOKEN_ID', tokenId)
+  const googleAuthToken = googleUser.getAuthResponse().id_token
+  console.log('ID Token:', googleAuthToken)
 
   saveDetails(googleUser)
 
-  postGoogleLogin()
+  postGoogleLogin(googleAuthToken)
 }
 
 export function onGoogleLoginFailure (err) {
@@ -47,23 +44,23 @@ function saveDetails (googleUser) {
 
 // @TODO: Use async await
 // connect to server & validate Google auth token; create user if email is new; fetch server generated token
-export function postGoogleLogin () {
+function postGoogleLogin (googleAuthToken) {
   window.fetch(config.BACKEND_SERVER + '/postGoogleLogin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({
-      token: getValue('GOOGLE_AUTH_TOKEN_ID')
+      token: googleAuthToken
     })
   })
     .then(response => response.json())
     .then(json => {
       console.log(json)
-      const { token } = json
-      // if found, save token in local storage
-      if (token) {
-        setValue('token', token)
+      const { success } = json
+      if (success) {
+        setValue('isLoggedIn', true)
       }
     })
     .catch(err => console.warn('err', err))

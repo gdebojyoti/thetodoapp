@@ -47,7 +47,7 @@ export function starTodo (id) {
   saveTodos(todos)
 }
 
-export function syncTodos () {
+export function syncTodos (errCb) {
   const { email } = getValue('profile') || {}
   if (!email) {
     return
@@ -57,6 +57,7 @@ export function syncTodos () {
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({
       todos: getAllTodos(),
       email,
@@ -65,10 +66,14 @@ export function syncTodos () {
   })
     .then(response => response.json())
     .then(json => {
-      console.log('todos', json)
+      const { todos, success } = json || {}
+      console.log('JSON todos', json)
       // if successful, update local data
-      if (typeof json.todos === 'object') {
+      if (success && typeof todos === 'object') {
         updateLocalTodos(json.todos)
+      } else {
+        errCb()
+        setValue('isLoggedIn', false)
       }
     })
     .catch(err => console.warn('err', err))

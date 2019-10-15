@@ -11,11 +11,14 @@ import './style'
 const Login = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     const { name, email } = getValue('profile') || {}
     setName(name)
     setEmail(email)
+
+    setIsLoggedIn(getValue('isLoggedIn'))
   }, [])
 
   const onSuccess = googleUser => {
@@ -26,17 +29,24 @@ const Login = () => {
     const profile = googleUser.getBasicProfile()
     setEmail(profile.getEmail())
     setName(profile.getName())
+    setIsLoggedIn(true)
   }
 
   const goHome = () => {
     window.location.href = '/'
   }
 
+  const syncTodosFunc = () => {
+    syncTodos(() => {
+      setIsLoggedIn(false)
+    })
+  }
+
   return (
     <div className='login'>
-      {name && <div>Hi {name}. You are currently signed in with {email}.</div>}
+      {isLoggedIn && <div>Hi {name}. You are currently signed in with {email}.</div>}
 
-      {!name && (
+      {!isLoggedIn && (
         <GoogleLogin
           clientId={config.GOOGLE_CLIENT_ID}
           onSuccess={onSuccess}
@@ -47,7 +57,7 @@ const Login = () => {
       )}
 
       <button className='login__home' onClick={goHome}>Back to Home</button>
-      <button className='login__home' onClick={syncTodos}>Sync data</button>
+      <button className='login__home' onClick={syncTodosFunc}>Sync data</button>
     </div>
   )
 }

@@ -19,6 +19,14 @@ const Login = () => {
     setEmail(email)
 
     setIsLoggedIn(getValue('isLoggedIn'))
+
+    // check push notification support
+    if (!('PushManager' in window)) {
+      console.warn('Push API is not supported on this browser')
+    }
+    if (!('Notification' in window)) {
+      console.warn('Notification API is not supported on this browser')
+    }
   }, [])
 
   const onSuccess = googleUser => {
@@ -42,6 +50,23 @@ const Login = () => {
     })
   }
 
+  const requestPermission = async () => {
+    console.log('attempting to trigger push notification')
+    const permission = await window.Notification.requestPermission()
+    if (permission !== 'granted') {
+      console.warn('Permission not granted for Notification')
+    } else {
+      console.info('Yipeee! Permission granted')
+    }
+  }
+
+  const notify = () => {
+    var event = new CustomEvent('custompushnotification', { msg: 'some val' })
+
+    // Dispatch the event.
+    document.dispatchEvent(event)
+  }
+
   return (
     <div className='login'>
       {isLoggedIn && <div>Hi {name}. You are currently signed in with {email}.</div>}
@@ -58,6 +83,8 @@ const Login = () => {
 
       <button className='login__home' onClick={goHome}>Back to Home</button>
       <button className='login__home' onClick={syncTodosFunc}>Sync data</button>
+      <button className='login__home' onClick={requestPermission}>Request</button>
+      <button className='login__home' onClick={notify}>Notify</button>
     </div>
   )
 }

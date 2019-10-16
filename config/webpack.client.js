@@ -56,6 +56,7 @@ var config = {
         cacheId: 'my-domain-cache-id',
         dontCacheBustUrlsMatching: /\.\w{8}\./,
         filename: 'sw.js',
+        importScripts: ['src/client/notification.js'],
         minify: true,
         navigateFallback: hostname + 'index.html',
         staticFileGlobsIgnorePatterns: [/\.map$/, /manifest\.json$/]

@@ -6,7 +6,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 var sourceDirectory = path.resolve(__dirname, '../src')
 var publicDirectory = path.resolve(__dirname, '../public')
-var hostname = 'http://xenspaces.xyz/'
+var hostname = 'https://thetodo.app/'
 
 var config = {
   mode: 'development',

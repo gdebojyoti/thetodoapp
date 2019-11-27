@@ -24,7 +24,7 @@ export function addTodo (todo) {
 
 // mark / unmark a todo as done
 export function toggleTodo (id, isDone) {
-  const todos = getAllTodos().map(todo => todo.id === id ? { ...todo, isDone } : todo)
+  const todos = getAllTodos().map(todo => todo.id === id ? { ...todo, isDone, lastUpdated: (new Date()).getTime() } : todo)
   saveTodos(todos)
 }
 
@@ -42,6 +42,7 @@ export function starTodo (id) {
   todos.map(todo => {
     if (todo.id === id) {
       todo.isStarred = !todo.isStarred
+      todo.lastUpdated = (new Date()).getTime()
     }
   })
   saveTodos(todos)

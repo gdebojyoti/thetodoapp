@@ -22,7 +22,7 @@ const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }
   const titleClass = 'todo-item__name' + (isDone ? ' todo-item__name--done' : '')
 
   const points = [] // list • time • subtasks count
-  list && points.push(`${list}`)
+  // list && points.push(<span>{list}</span>)
   points.push(time)
   !!subTasks.length && points.push(`${subTasks.length} task${subTasks.length > 1 ? 's' : ''}`)
 
@@ -36,7 +36,11 @@ const TodoItem = ({ item, edit, onToggle: onToggleDone, onDelete, onToggleStar }
       <div className='todo-item__info'>
         <div className={titleClass}>{title}</div>
         {details && <div className='todo-item__details'>{details}</div>}
-        <div className='todo-item__points'>{points.join(' • ')}</div>
+        <div className='todo-item__points'>
+          {list && <span className='todo-item__label'>{list}</span>}
+          {list && ' • '}
+          {points.join(' • ')}
+        </div>
       </div>
 
       <div className='todo-item__controls'>

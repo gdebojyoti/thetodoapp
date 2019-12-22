@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
+import NavBar from '../../components/NavBar'
 import TodoInput from '../../components/TodoInput'
 import TodoItem from '../../components/TodoItem'
 import TodoInputFullView from '../../components/TodoInputFullView'
@@ -167,23 +168,26 @@ const Home = () => {
   const validTodos = [...todos.filter(({ isDone, isDeleted }) => !isDone && !isDeleted), ...todos.filter(({ isDone, isDeleted }) => isDone && !isDeleted)]
 
   return (
-    <div className='home'>
-      <h1 className='home__title'>My Tasks</h1>
+    <>
+      <NavBar />
+      <div className='home'>
+        <h1 className='home__title'>My Tasks</h1>
 
-      <div className='home__list'>
-        {validTodos.filter(({ isDeleted }) => !isDeleted).map((todo, index) => {
-          return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
-        })}
-        {!validTodos.length && <div>No tasks found. Create a new one.</div>}
+        <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
+
+        <div className='home__list'>
+          {validTodos.filter(({ isDeleted }) => !isDeleted).map((todo, index) => {
+            return <TodoItem key={index} item={todo} onToggle={onToggle} onDelete={onDelete} onToggleStar={onToggleStar} edit={setEditId} />
+          })}
+          {!validTodos.length && <div>No tasks found. Create a new one.</div>}
+        </div>
+
+        {isDetailsOpen && <Modal onClose={() => setIsDetailsOpen(false)}><TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} /></Modal>}
+        {editId && <Modal onClose={() => setEditId(null)}><TodoInputFullView data={todos.find(todo => todo.id === editId)} onSubmit={onUpdate} onClose={() => setEditId(null)} /></Modal>}
+
+        {showingToast && <Toast text='Your task was deleted' cta='Undo' onClick={undoDeletion} />}
       </div>
-
-      <TodoInput onAdd={onAdd} moreDetails={openMoreDetails} />
-
-      {isDetailsOpen && <Modal onClose={() => setIsDetailsOpen(false)}><TodoInputFullView onSubmit={onAdd} onClose={() => setIsDetailsOpen(false)} /></Modal>}
-      {editId && <Modal onClose={() => setEditId(null)}><TodoInputFullView data={todos.find(todo => todo.id === editId)} onSubmit={onUpdate} onClose={() => setEditId(null)} /></Modal>}
-
-      {showingToast && <Toast text='Your task was deleted' cta='Undo' onClick={undoDeletion} />}
-    </div>
+    </>
   )
 }
 

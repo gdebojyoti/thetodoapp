@@ -37,9 +37,10 @@ const TodoInput = ({ onAdd, moreDetails }) => {
           onFocus={e => setShowMore(true)}
           onBlur={e => setShowMore(false)}
         />
-        <button type='submit' className='todo-input__cta' disabled={!input}>Save</button>
+        <button type='submit' className='todo-input__cta' disabled={!input}>→</button>
+        <button type='button' className='todo-input__cta todo-input__cta--secondary' onClick={moreDetails}>...</button>
       </form>
-      <a className='todo-input__trigger' onClick={moreDetails}>Tap to add more details</a>
+      {/* <a className='todo-input__trigger'>Tap to add more details</a> */}
     </div>
   )
 }

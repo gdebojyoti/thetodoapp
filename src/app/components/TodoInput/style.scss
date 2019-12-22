@@ -1,12 +1,14 @@
 @import '../../utilities/variables';
 
 .todo-input {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  // position: fixed;
+  // bottom: 0;
+  // left: 0;
+  position: sticky;
+  top: 20px;
   width: 100%;
-  transform: translateY(26px);
-  transition: transform .2s;
+  // transform: translateY(26px);
+  // transition: transform .2s;
 
   &--focussed {
     transform: translateY(0);
@@ -19,10 +21,10 @@
   &__input {
     flex-grow: 1;
     padding: 0 16px;
-    border: none;
-    border-top: solid 1px #ccc;
-    border-bottom: solid 1px #ccc;
+    border: solid 1px #ccc;
+    border-right: none;
     line-height: 48px;
+    border-radius: 2px 0 0 2px;
   }
   
   &__cta {
@@ -30,6 +32,13 @@
     border: none;
     color: #fff;
     background-color: $primaryColor;
+    border-radius: 0 2px 2px 0;
+
+    &--secondary {
+      margin-left: 10px;
+      background-color: #BDC3C7;
+      border-radius: 2px;
+    }
   }
 
   &__trigger {
